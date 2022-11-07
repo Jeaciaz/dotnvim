@@ -80,7 +80,7 @@ return require'packer'.startup(function (use)
   use 'gpanders/nvim-parinfer'
   
   -- Clojure(script)
-  use 'tpope/vim-fireplace' -- nREPL
+  use 'Olical/conjure' -- nREPL
 
 	
 	-- Разное
