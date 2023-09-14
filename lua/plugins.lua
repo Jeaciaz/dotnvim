@@ -1,112 +1,61 @@
--- vim.cmd 'packadd packer.nvim'
+local status, packer = pcall(require, "packer")
+if (not status) then
+	print("Packer is not installed")
+	return
+end
 
-return require'packer'.startup(function (use)
+vim.cmd [[packadd packer.nvim]]
+
+packer.startup(function(use)
 	use 'wbthomason/packer.nvim'
-  use 'ThePrimeagen/vim-be-good'
-
-
-
-	-- Внешний вид
-	use 'ellisonleao/gruvbox.nvim' -- Цветовая схема
-	use 'romgrk/barbar.nvim' -- Buffer bar
-	use 'kyazdani42/nvim-web-devicons' -- Иконки файлов
-
-
-
-	-- Навигация
-	use 'kevinhwang91/rnvimr' -- Ranger file picker
 	use {
-		'nvim-telescope/telescope-fzf-native.nvim', 
-		run = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' 
+		'nvim-lualine/lualine.nvim',
+		requires = { 'kyazdani42/nvim-web-devicons', opt = true }
 	}
-	use {
-		'nvim-telescope/telescope.nvim', branch = '0.1.x',
-		requires = { { 'nvim-lua/plenary.nvim' } },
-		config = function ()
-			require'telescope'.setup {
-				defaults = {
-					file_ignore_patterns = { 'node_modules', 'lock%.json', 'dist' },
-					scroll_strategy = limit,
-				},
-				pickers = {
-					find_files = {
-						theme = 'dropdown',
-					},
-					live_grep = {
-						theme = 'dropdown',
-					}
-				},
-				extensions = {
-					fzf = {
-						fuzzy = true,
-						override_generic_sorter = true,
-						override_file_sorter = true,
-					}
-				}
-			}
+	use 'neovim/nvim-lspconfig' -- LSP config colletion
+	use 'onsails/lspkind.nvim' -- pictograms for autocomplete
+	use 'L3MON4D3/LuaSnip' -- snippet engine
+	use 'hrsh7th/cmp-nvim-lsp' -- nvim-cmp source for builtin LSP
+	use 'hrsh7th/cmp-buffer' -- nvim-cmp source for buffer words
+	use 'hrsh7th/nvim-cmp' -- completion engine
 
-			require'telescope'.load_extension 'fzf'
+	use {
+    'nvim-treesitter/nvim-treesitter',
+    run = function()
+		  local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
+		  ts_update()
 		end
 	}
+  use 'windwp/nvim-ts-autotag'
 
+	use {
+		"windwp/nvim-autopairs", -- brackets
+    config = function() require("nvim-autopairs").setup {} end
+	}
 
+	use 'kyazdani42/nvim-web-devicons'
+	use 'glepnir/lspsaga.nvim' -- hover docs and such
+	use 'jose-elias-alvarez/null-ls.nvim'
+	use 'MunifTanjim/prettier.nvim'
+	use 'MunifTanjim/eslint.nvim'
+	use "nvim-lua/plenary.nvim"
+	use "ctrlpvim/ctrlp.vim"
 
-	-- LSP/Autocomplete
-	use 'nvim-treesitter/nvim-treesitter' -- Treesitter
-	use 'neovim/nvim-lspconfig' -- Collection of configs for built-in LSP client
-	use 'hrsh7th/nvim-cmp' -- Autocomplete, utils below
-	use 'hrsh7th/cmp-nvim-lsp'
-	use 'hrsh7th/cmp-buffer'
-	use 'hrsh7th/cmp-path'
-	use 'hrsh7th/cmp-cmdline'
-	use 'saadparwaiz1/cmp_luasnip'
-	use 'L3MON4D3/LuaSnip' -- Snippet engine
+	use { "rose-pine/neovim", as = "rose-pine" }
 
-	-- TypeScript
-	
-  use 'jose-elias-alvarez/typescript.nvim' -- Typescript LSP setup
+  use 'ptzz/lf.vim'
+  use 'voldikss/vim-floaterm'
+
+	use 'numToStr/Comment.nvim'
+	use 'JoosepAlviste/nvim-ts-context-commentstring'
+
   use {
-    'jose-elias-alvarez/null-ls.nvim',
-    requires = { { 'nvim-lua/plenary.nvim' } },
+    'Wansmer/sibling-swap.nvim',
+    requires = { 'nvim-treesitter' },
   }
 
-  -- F#
-  use 'ionide/Ionide-vim' -- Ionide
-
-  -- HTML/CSS
-  use 'mattn/emmet-vim' -- Emmet: <C-y>,
-
-  -- Лиспы
-  use 'gpanders/nvim-parinfer'
-  
-  -- Clojure(script)
-  use 'Olical/conjure' -- nREPL
-
-	
-	-- Разное
-	use 'tpope/vim-surround' -- Скобки
-	use 'JoosepAlviste/nvim-ts-context-commentstring' -- Комментарии в зависимости от контекста в jsx
-	use { -- Комментарии везде по gc
-		'numToStr/Comment.nvim',
-		config = function ()
-			require'Comment'.setup {
-				pre_hook = function(ctx)
-					local U = require 'Comment.utils'
-
-					local location = nil
-					if ctx.ctype == U.ctype.block then
-						location = require('ts_context_commentstring.utils').get_cursor_location()
-					elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
-						location = require('ts_context_commentstring.utils').get_visual_start_location()
-					end
-
-					return require('ts_context_commentstring.internal').calculate_commentstring {
-						key = ctx.ctype == U.ctype.line and '__default' or '__multiline',
-						location = location,
-					}
-				end,
-			}
-		end
-	}
-	use 'cohama/lexima.vim' -- Автозакрытие скобочек
+  use {
+    'nvim-telescope/telescope.nvim', tag = '0.1.1',
+    requires = { {'nvim-lua/plenary.nvim'} }
+  }
 end)
