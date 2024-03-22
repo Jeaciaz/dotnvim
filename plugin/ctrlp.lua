@@ -1,3 +1,4 @@
 vim.keymap.set('n', '<C-e>', '<Cmd>CtrlP<CR>')
 
-vim.g.ctrlp_user_command = 'arc ls-files $nb'
+-- update for your VSC
+-- vim.g.ctrlp_user_command = 'git ls'

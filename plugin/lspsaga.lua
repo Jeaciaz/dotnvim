@@ -1,40 +1,42 @@
-local status, saga = pcall(require, 'lspsaga')
-if (not status) then return end
+local ok, saga = pcall(require, 'lspsaga')
+if not ok then return end
 
 saga.setup {
-	ui = {
-		winblend = 10,
-		border = 'rounded'
-	},
-  code_action = {
-    show_server_name = true,
-  },
-  lightbulb = {
-    enable = false,
-  },
+    ui = {
+        winblend = 10,
+        border = 'rounded',
+    },
+    code_action = {
+        show_server_name = true,
+    },
+    lightbulb = {
+        enable = false,
+        enable_in_insert = false,
+    }
 }
 
 local opts = { noremap = true, silent = true }
+local remap = vim.keymap.set
 
 -- Definition
-vim.keymap.set('n', '<leader>d', '<Cmd>Lspsaga goto_definition<CR>', opts)
-vim.keymap.set('n', '<leader>D', '<Cmd>Lspsaga peek_definition<CR>', opts)
-vim.keymap.set('n', '<leader>t', '<Cmd>Lspsaga goto_type_definition<CR>', opts)
-vim.keymap.set('n', '<leader>T', '<Cmd>Lspsaga peek_type_definition<CR>', opts)
+remap('n', '<Leader>d', '<Cmd>Lspsaga goto_definition<CR>', opts)
+remap('n', '<Leader>D', '<Cmd>Lspsaga peek_definition<CR>', opts)
+remap('n', '<Leader>t', '<Cmd>Lspsaga goto_type_definition<CR>', opts)
+remap('n', '<Leader>T', '<Cmd>Lspsaga peek_type_definition<CR>', opts)
 
 -- Diagnostic
-vim.keymap.set('n', '<C-j>', '<Cmd>Lspsaga diagnostic_jump_next<CR>', opts)
+remap('n', '<C-j>',     '<Cmd>Lspsaga diagnostic_jump_next<CR>', opts)
 
 -- Hover
-vim.keymap.set('n', 'K', '<Cmd>Lspsaga hover_doc<CR>', opts)
+remap('n', 'K',         '<Cmd>Lspsaga hover_doc<CR>', opts)
 
 -- Rename
-vim.keymap.set('n', '<leader>rn', '<Cmd>Lspsaga rename<CR>', opts)
+remap('n', '<Leader>rn', '<Cmd>Lspsaga rename<CR>', opts)
 
--- Codeaction
-local codeaction = require 'lspsaga.codeaction'
-vim.keymap.set('n', '<leader>ca', function() codeaction:code_action() end, { silent = true })
-vim.keymap.set('v', '<leader>ca', function()
-	vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<C-U>", true, false, true))
-	codeaction:range_code_action()
-end, { silent = true })
+-- Code action
+local codeaction = require'lspsaga.codeaction'
+remap('n', '<Leader>ca', function() codeaction:code_action() end, opts)
+remap('v', '<Leader>ca', function()
+    vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<C-U>", true, false, true))
+    codeaction:range_code_action()
+end, opts)

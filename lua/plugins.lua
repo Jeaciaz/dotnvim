@@ -1,61 +1,51 @@
-local status, packer = pcall(require, "packer")
-if (not status) then
-	print("Packer is not installed")
-	return
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+-- Get Lazy if not installed
+if not vim.loop.fs_stat(lazypath) then
+	vim.fn.system({
+		"git",
+		"clone",
+		"--filter=blob:none",
+		"https://github.com/folke/lazy.nvim.git",
+		"--branch=stable",
+		lazypath
+	})
 end
+vim.opt.rtp:prepend(lazypath)
 
-vim.cmd [[packadd packer.nvim]]
+require'lazy'.setup({
+	{ 'nvim-lualine/lualine.nvim', dependencies = { 'nvim-tree/nvim-web-devicons' }},
+	'neovim/nvim-lspconfig',
+	'onsails/lspkind.nvim', -- pictograms for autocomplete
+    -- { 'L3MON4D3/LuaSnip', version = 'v2.*', build = 'make install_jsregexp' }, -- snippet engine
+    'hrsh7th/cmp-vsnip', 'hrsh7th/vim-vsnip', -- snippet engine (hopefully this one doesnt crash occasionally)
+	'hrsh7th/cmp-nvim-lsp', -- nvim-cmp source for builtin LSP
+	'hrsh7th/cmp-buffer', -- nvim-cmp source for buffer words
+	'hrsh7th/nvim-cmp', -- completion engine
+	
+	{ 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate' },
 
-packer.startup(function(use)
-	use 'wbthomason/packer.nvim'
-	use {
-		'nvim-lualine/lualine.nvim',
-		requires = { 'kyazdani42/nvim-web-devicons', opt = true }
-	}
-	use 'neovim/nvim-lspconfig' -- LSP config colletion
-	use 'onsails/lspkind.nvim' -- pictograms for autocomplete
-	use 'L3MON4D3/LuaSnip' -- snippet engine
-	use 'hrsh7th/cmp-nvim-lsp' -- nvim-cmp source for builtin LSP
-	use 'hrsh7th/cmp-buffer' -- nvim-cmp source for buffer words
-	use 'hrsh7th/nvim-cmp' -- completion engine
+	'windwp/nvim-ts-autotag', -- autoclose tags
+	{ 'windwp/nvim-autopairs', event = 'InsertEnter', config = true },
 
-	use {
-    'nvim-treesitter/nvim-treesitter',
-    run = function()
-		  local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
-		  ts_update()
+	'kyazdani42/nvim-web-devicons',
+	'nvimdev/lspsaga.nvim',
+	'ctrlpvim/ctrlp.vim',
+	{ 'rose-pine/neovim', name = 'rose-pine' },
+	{ 
+		'rolv-apneseth/tfm.nvim', 
+		options = {
+			replace_netrw = true,
+		},
+		config = function()
+			vim.api.nvim_set_keymap('n', '<C-f>', '', {
+				noremap = true,
+				callback = require'tfm'.open
+			})
 		end
-	}
-  use 'windwp/nvim-ts-autotag'
+	},
+	'numToStr/Comment.nvim',
+	'JoosepAlviste/nvim-ts-context-commentstring',
 
-	use {
-		"windwp/nvim-autopairs", -- brackets
-    config = function() require("nvim-autopairs").setup {} end
-	}
-
-	use 'kyazdani42/nvim-web-devicons'
-	use 'glepnir/lspsaga.nvim' -- hover docs and such
-	use 'jose-elias-alvarez/null-ls.nvim'
-	use 'MunifTanjim/prettier.nvim'
-	use 'MunifTanjim/eslint.nvim'
-	use "nvim-lua/plenary.nvim"
-	use "ctrlpvim/ctrlp.vim"
-
-	use { "rose-pine/neovim", as = "rose-pine" }
-
-  use 'ptzz/lf.vim'
-  use 'voldikss/vim-floaterm'
-
-	use 'numToStr/Comment.nvim'
-	use 'JoosepAlviste/nvim-ts-context-commentstring'
-
-  use {
-    'Wansmer/sibling-swap.nvim',
-    requires = { 'nvim-treesitter' },
-  }
-
-  use {
-    'nvim-telescope/telescope.nvim', tag = '0.1.1',
-    requires = { {'nvim-lua/plenary.nvim'} }
-  }
-end)
+	'Wansmer/sibling-swap.nvim',
+	{ 'nvim-telescope/telescope.nvim', tag = '0.1.6', dependencies = { 'nvim-lua/plenary.nvim' } }
+})
