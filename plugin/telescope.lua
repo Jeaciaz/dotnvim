@@ -2,6 +2,7 @@ local ok, telescope = pcall(require, 'telescope')
 if not ok then return end
 
 local actions = require'telescope.actions'
+local builtin = require'telescope.builtin'
 
 telescope.setup {
     defaults = {
@@ -23,4 +24,5 @@ telescope.setup {
     }
 }
 
-vim.api.nvim_set_keymap('n', '<Leader>fb', '<Cmd>Telescope buffers<CR>', { silent = true })
+vim.keymap.set('n', '<Leader>fb', '<Cmd>Telescope buffers<CR>', { silent = true })
+vim.keymap.set('n', '<Leader>gg', function() builtin.live_grep({ glob_pattern = { '!test/**/*', 'pkg/**/*.js' }}) end, { silent = true })

@@ -23,6 +23,8 @@ require'lazy'.setup({
 	'hrsh7th/nvim-cmp', -- completion engine
 	
 	{ 'nvim-treesitter/nvim-treesitter', build = ':TSUpdate' },
+    'nvim-treesitter/nvim-treesitter-refactor',
+    'nvim-treesitter/nvim-treesitter-context', -- context of current line on top of window
 
 	'windwp/nvim-ts-autotag', -- autoclose tags
 	{ 'windwp/nvim-autopairs', event = 'InsertEnter', config = true },
@@ -37,6 +39,7 @@ require'lazy'.setup({
 			replace_netrw = true,
 		},
 		config = function()
+            require'tfm'.select_file_manager'ranger'
 			vim.api.nvim_set_keymap('n', '<C-f>', '', {
 				noremap = true,
 				callback = require'tfm'.open

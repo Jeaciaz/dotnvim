@@ -11,6 +11,9 @@ vim.o.ignorecase = true
 vim.o.expandtab = true
 vim.o.shiftwidth = 4
 vim.o.tabstop = 4
+vim.o.colorcolumn = '80'
+vim.o.scrolloff = 6
+vim.o.updatetime = 1000
 
 local remap = vim.api.nvim_set_keymap
 local opts = { silent = true, noremap = true }
