@@ -1,6 +1,11 @@
 local ok, nvim_lsp = pcall(require, 'lspconfig')
 if (not ok) then return end
 
+require'mason'.setup()
+require'mason-lspconfig'.setup {
+    ensure_installed = { 'css-lsp', 'typescript-language-server', 'eslint' }
+}
+
 local protocol = require'vim.lsp.protocol'
 
 local on_attach = function(client, bufnr)
@@ -10,7 +15,7 @@ local on_attach = function(client, bufnr)
     local opts = { noremap = true, silent = true }
 
     buf_set_keymap('n', 'gr', '<Cmd>lua vim.lsp.buf.references()<CR>', opts)
-    buf_set_keymap('n', '<Leader>ff', '<Cmd>do formatting please xoxo', opts)
+    buf_set_keymap('n', '<Leader>ff', '<Cmd>lua vim.lsp.buf.format()<CR>', opts)
 end
 
 protocol.CompletionItemKind = {
@@ -50,6 +55,11 @@ nvim_lsp.tsserver.setup {
     capabilities = capabilities
 }
 
+nvim_lsp.eslint.setup {
+    on_attach = on_attach,
+    capabilities = capabilities,
+}
+
 nvim_lsp.cssls.setup {
     on_attach = on_attach,
     capabilities = capabilities,
@@ -73,3 +83,5 @@ vim.diagnostic.config {
         source = "always" -- or "if_many"
     },
 }
+
+vim.keymap.set('n', '<Leader>r', function() require'live-rename'.rename({insert = true}) end, {desc = 'LSP rename'})

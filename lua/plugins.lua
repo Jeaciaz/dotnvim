@@ -14,9 +14,12 @@ vim.opt.rtp:prepend(lazypath)
 
 require'lazy'.setup({
 	{ 'nvim-lualine/lualine.nvim', dependencies = { 'nvim-tree/nvim-web-devicons' }},
+    'williamboman/mason.nvim',
+    'williamboman/mason-lspconfig.nvim',
 	'neovim/nvim-lspconfig',
+    'saecki/live-rename.nvim',
 	'onsails/lspkind.nvim', -- pictograms for autocomplete
-    -- { 'L3MON4D3/LuaSnip', version = 'v2.*', build = 'make install_jsregexp' }, -- snippet engine
+    { 'L3MON4D3/LuaSnip', version = 'v2.*', build = 'make install_jsregexp' }, -- snippet engine
     'hrsh7th/cmp-vsnip', 'hrsh7th/vim-vsnip', -- snippet engine (hopefully this one doesnt crash occasionally)
 	'hrsh7th/cmp-nvim-lsp', -- nvim-cmp source for builtin LSP
 	'hrsh7th/cmp-buffer', -- nvim-cmp source for buffer words
@@ -39,7 +42,6 @@ require'lazy'.setup({
 			replace_netrw = true,
 		},
 		config = function()
-            require'tfm'.select_file_manager'ranger'
 			vim.api.nvim_set_keymap('n', '<C-f>', '', {
 				noremap = true,
 				callback = require'tfm'.open
@@ -50,5 +52,15 @@ require'lazy'.setup({
 	'JoosepAlviste/nvim-ts-context-commentstring',
 
 	'Wansmer/sibling-swap.nvim',
-	{ 'nvim-telescope/telescope.nvim', tag = '0.1.6', dependencies = { 'nvim-lua/plenary.nvim' } }
+	{ 'nvim-telescope/telescope.nvim', tag = '0.1.6', dependencies = { 'nvim-lua/plenary.nvim' } },
+
+    { 
+        'olimorris/codecompanion.nvim',
+        dependencies = {
+            'nvim-lua/plenary.nvim',
+            'nvim-treesitter/nvim-treesitter',
+            'nvim-telescope/telescope.nvim',
+        },
+        config = true,
+    }
 })

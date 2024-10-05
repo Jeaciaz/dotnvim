@@ -30,9 +30,6 @@ remap('n', '<C-j>',     '<Cmd>Lspsaga diagnostic_jump_next<CR>', opts)
 -- Hover
 remap('n', 'K',         '<Cmd>Lspsaga hover_doc<CR>', opts)
 
--- Rename
-remap('n', '<Leader>rn', '<Cmd>Lspsaga rename<CR>', opts)
-
 -- Code action
 local codeaction = require'lspsaga.codeaction'
 remap('n', '<Leader>ca', function() codeaction:code_action() end, opts)
