@@ -15,11 +15,9 @@ vim.o.scrolloff = 8
 vim.o.updatetime = 1000
 
 local remap = vim.api.nvim_set_keymap
-local opts = { silent = true, noremap = true }
+local opts = {silent = true, noremap = true}
 
-if vim.g.neovide then
-    vim.cmd [[cd ~/dev/finaloop-app]]
-end
+if vim.g.neovide then vim.cmd [[cd ~/dev/finaloop-app]] end
 
 vim.g.mapleader = ' '
 remap('n', '<Space>', '<Nop>', opts)
