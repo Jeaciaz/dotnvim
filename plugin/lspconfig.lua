@@ -3,7 +3,7 @@ if (not ok) then return end
 
 require'mason'.setup()
 require'mason-lspconfig'.setup {
-    ensure_installed = {'css-lsp', 'typescript-language-server', 'eslint'}
+    ensure_installed = {'css-lsp', 'ts_ls', 'eslint'}
 }
 
 local protocol = require 'vim.lsp.protocol'
@@ -47,10 +47,19 @@ protocol.CompletionItemKind = {
     '' -- TypeParameter
 }
 
-local capabilities = require'cmp_nvim_lsp'.default_capabilities()
+local capabilities = require'blink.cmp'.get_lsp_capabilities()
 
-nvim_lsp.tsserver.setup {
-    on_attach = on_attach,
+nvim_lsp.ts_ls.setup {
+    on_attach = function(client, bufnr)
+        vim.keymap.set('n', '<Leader>fi', function()
+            vim.lsp.buf.execute_command({
+                command = "_typescript.organizeImports",
+                arguments = {vim.fn.expand("%:p")}
+            })
+        end, {silent = true})
+        require'twoslash-queries'.attach(client, bufnr)
+        on_attach(client, bufnr)
+    end,
     filetypes = {
         "typescript", "typescriptreact", "javascript", "typescript.tsx"
     },

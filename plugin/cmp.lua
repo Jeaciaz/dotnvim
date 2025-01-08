@@ -16,7 +16,9 @@ cmp.setup {
             behavior = cmp.ConfirmBehavior.Replace
         }
     },
-    sources = cmp.config.sources {{name = 'nvim_lsp'}, {name = 'buffer'}},
+    sources = cmp.config.sources {
+        {name = 'luasnip'}, {name = 'nvim_lsp'}, {name = 'buffer'}
+    },
     formatting = {
         format = lspkind.cmp_format {with_text = false, maxwidth = 50}
     }

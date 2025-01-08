@@ -32,4 +32,6 @@ remap('v', '<C-c>', '"+y', opts)
 remap('n', '<Leader>[', '<Cmd>cp<CR>', opts)
 remap('n', '<Leader>]', '<Cmd>cn<CR>', opts)
 
+remap('n', '<C-f>', '<Cmd>lua require\'tfm\'.open()<CR>', opts)
+
 require 'plugins'

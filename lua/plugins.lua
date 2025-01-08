@@ -19,34 +19,46 @@ require'lazy'.setup({
     'neovim/nvim-lspconfig', -- Streamline LSP setup
     'stevearc/conform.nvim', -- Formatter engine
     'saecki/live-rename.nvim', -- Rename using LSP but interactively & pretty
-    'onsails/lspkind.nvim', -- pictograms for autocomplete
     {'L3MON4D3/LuaSnip', version = 'v2.*', build = 'make install_jsregexp'}, -- snippet engine
-    'hrsh7th/cmp-vsnip', -- autocompletion with vsnip
-    'hrsh7th/vim-vsnip', -- snippet engine (hopefully this one doesnt crash occasionally)
-    'hrsh7th/cmp-nvim-lsp', -- nvim-cmp source for builtin LSP
-    'hrsh7th/cmp-buffer', -- nvim-cmp source for buffer words
-    'hrsh7th/nvim-cmp', -- completion engine
     {'nvim-treesitter/nvim-treesitter', build = ':TSUpdate'},
     'nvim-treesitter/nvim-treesitter-refactor',
     'nvim-treesitter/nvim-treesitter-context', -- context of current line on top of window
-
+    {
+        'saghen/blink.cmp',
+        dependencies = 'rafamadriz/friendly-snippets',
+        version = '*',
+        opts = {
+            keymap = {preset = 'super-tab'},
+            sources = {default = {'lsp', 'path', 'snippets', 'buffer'}},
+            completion = {
+                documentation = {auto_show = true, auto_show_delay_ms = 200},
+                ghost_text = {enabled = true}
+            },
+            signature = {enabled = true}
+        }
+    }, -- autocomplete
+    {
+        'folke/flash.nvim',
+        event = 'VeryLazy',
+        opts = {},
+        keys = {
+            {
+                '<C-s>',
+                mode = {'n', 'x', 'o'},
+                function() require'flash'.treesitter() end,
+                desc = 'Flash treesitter'
+            }
+        }
+    }, -- jumping around
     'windwp/nvim-ts-autotag', -- autoclose tags
     {'windwp/nvim-autopairs', event = 'InsertEnter', config = true},
 
     'kyazdani42/nvim-web-devicons', -- icons 
     'nvimdev/lspsaga.nvim', -- LSP hover/diagnostics
+    'marilari88/twoslash-queries.nvim', -- // ?^ queries
     'ctrlpvim/ctrlp.vim', -- look up file by name 
     {'rose-pine/neovim', name = 'rose-pine'}, -- theme
-    {
-        'rolv-apneseth/tfm.nvim',
-        options = {replace_netrw = true},
-        config = function()
-            vim.api.nvim_set_keymap('n', '<C-f>', '', {
-                noremap = true,
-                callback = require'tfm'.open
-            })
-        end
-    }, -- Terminal File Manager
+    {'rolv-apneseth/tfm.nvim', options = {replace_netrw = true}}, -- Terminal File Manager
     'numToStr/Comment.nvim', -- comment engine
     'JoosepAlviste/nvim-ts-context-commentstring', -- helps comment engine be aware of context (e.g. JSX)
 
@@ -56,6 +68,8 @@ require'lazy'.setup({
         tag = '0.1.6',
         dependencies = {'nvim-lua/plenary.nvim'}
     }, -- telescope
+    {'folke/todo-comments.nvim', dependencies = {'nvim-lua/plenary.nvim'}}, -- TODO comments
+    {'mistricky/codesnap.nvim', build = 'make'},
     {'akinsho/git-conflict.nvim', version = '*', config = true}, -- solving git conflicts
     {
         'f-person/git-blame.nvim',
